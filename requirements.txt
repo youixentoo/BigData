@@ -1,0 +1,4 @@
+tensorflow==2.10.1
+tensorflow-gpu==2.8.4
+matplotlib~=3.6.0
+h5py~=3.8.0
