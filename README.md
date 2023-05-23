@@ -1,7 +1,7 @@
 # BigData
 BigData assignment, Thijs Weenink.<br>
 A simple classifier for the [PatchCamelyon](https://patchcamelyon.grand-challenge.org/) dataset.<br>
-Don't forget to edit the filepath in `main.py` to point to the correct location of the datasets.
+Don't forget to edit the filepath in `network.py` to point to the correct location of the datasets.
 
 ## Versions of modules used
 tensorflow 2.10.1<br>
