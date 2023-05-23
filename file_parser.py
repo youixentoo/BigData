@@ -42,17 +42,21 @@ def _load_single_file_tfDataset(dataset_loc, set_type, x_or_y):
 
 # Dataset configuration
 def _dataset_config(ds):
-    ds = ds.cache()
+    # ds = ds.cache()
     ds = ds.shuffle(buffer_size=1024, reshuffle_each_iteration=True)
-    ds = ds.prefetch(buffer_size=tf.data.AUTOTUNE) # Could fine tune it, but why
+    ds = ds.prefetch(buffer_size=tf.data.AUTOTUNE) # Could fine tune it myself, but why
     return ds
 
 
-# Cannot wrap the get_dataset() function with try-ctach as it will give an error due to how the dataset is loaded
+# Cannot wrap the get_dataset() function with try-catch as it will give an additional error due to how the dataset is loaded
+# The error is one thrown by the model itself and don't want to surround the model with try-catch
 # Instead a check if the file exists on disk and is not empty
+# Terminate the script using 'sys.exit()' as you are unable to continue anyway
+# Prints the files the script tried
 def check_if_exists(dataset_loc, dataset_type):
     file_path_x = pathlib.Path(f"{dataset_loc}/camelyonpatch_level_2_split_{dataset_type}_x.h5")
     file_path_y = pathlib.Path(f"{dataset_loc}/camelyonpatch_level_2_split_{dataset_type}_y.h5")
+    # Order matters as .stat().st_size gives an error if the file doesn't exist
     if not (file_path_x.exists() and file_path_x.stat().st_size > 0) or not (file_path_y.exists() and file_path_y.stat().st_size > 0):
         print(f"""
 Could not find one or both of the files needed for dataset creation\n
@@ -71,12 +75,6 @@ def get_dataset(dataset_loc, dataset_type, batch_size, img_height, img_width):
       (tf.TensorShape((batch_size, img_height, img_width, 3)), tf.TensorShape((batch_size, 1, 1, 1))),
       args=(dataset_loc, dataset_type))
     return _dataset_config(dataset)
-      
-    # valid_dataset = tf.data.Dataset.from_generator(
-    #   fp._load_as_generator,
-    #   (tf.uint8, tf.uint8),
-    #   (tf.TensorShape((batch_size, img_height, img_width, 3)), tf.TensorShape((batch_size, 1, 1, 1))),
-    #   args=(dataset_loc, "valid"))
      
         
 # Get the labels. Uses np.ravel to go from [[[[0]]] [[[1]]] [[[0]]]] to [[0] [1] [0]]
@@ -93,10 +91,6 @@ def get_labels_h5_file(dataset_loc, set_type):
 # Should not ever go here as the script could not have passed check_if_exists() if this gets called
 def parse_FNFE(exc_str):
     return re.search("(?<=name = ).*?(?=,)", str(exc_str)).group()
-    
-        
-def get_test_image(dataset_loc, set_type):
-    return h5File(f"{dataset_loc}/camelyonpatch_level_2_split_{set_type}_x.h5", 'r')["x"]
     
 
 # @profile
