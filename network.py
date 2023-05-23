@@ -26,7 +26,7 @@ from tensorflow.keras import layers
 from tensorflow.keras.models import Sequential
 
 # Main function calling all the other functions
-@profile
+# @profile
 def main():
     # Batch size as per iterchunks; DO NOT CHANGE
     batch_size = 32
