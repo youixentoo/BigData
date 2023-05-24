@@ -35,7 +35,7 @@ def main():
     dataset_loc = 'C:/Users/User/Desktop/School/BigData/Dataset'
     img_height = 96 
     img_width = 96
-    epochs = 2
+    epochs = 10
     
     # Labels test data
     test_labels = fp.get_labels_h5_file(dataset_loc, "test")
